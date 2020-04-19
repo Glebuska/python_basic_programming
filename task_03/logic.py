@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import dlib
 import face_recognition
 
 
@@ -75,7 +74,7 @@ def calculateDelaunayTriangles(rect, points):
             # Get face-points (from 68 face detector) by coordinates
             for j in range(0, 3):
                 for k in range(0, len(points)):
-                    if (abs(pt[j][0] - points[k][0]) < 1.0 and abs(pt[j][1] - points[k][1]) < 1.0):
+                    if abs(pt[j][0] - points[k][0]) < 1.0 and abs(pt[j][1] - points[k][1]) < 1.0:
                         ind.append(k)
                         # Three points form a triangle. Triangle array corresponds to the file tri.txt in FaceMorph
             if len(ind) == 3:
@@ -104,7 +103,7 @@ def warpTriangle(img1, img2, t1, t2):
 
     # Get mask by filling triangle
     mask = np.zeros((r2[3], r2[2], 3), dtype=np.float32)
-    cv2.fillConvexPoly(mask, np.int32(t2RectInt), (1.0, 1.0, 1.0), 16, 0);
+    cv2.fillConvexPoly(mask, np.int32(t2RectInt), (1.0, 1.0, 1.0), 16, 0)
 
     # Apply warpImage to small rectangular patches
     img1Rect = img1[r1[1]:r1[1] + r1[3], r1[0]:r1[0] + r1[2]]
@@ -123,7 +122,7 @@ def warpTriangle(img1, img2, t1, t2):
     img2[r2[1]:r2[1] + r2[3], r2[0]:r2[0] + r2[2]] = img2[r2[1]:r2[1] + r2[3], r2[0]:r2[0] + r2[2]] + img2Rect
 
 
-if __name__ == '__main__':
+def start_swaping(filename1, filename2):
 
     # # Make sure OpenCV is version 3.0 or above
     # (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
@@ -133,8 +132,8 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # Read images
-    filename1 = 'me.jpg'
-    filename2 = 'den.jpg'
+    filename1 = str.join('\\', ['uploads', filename1])
+    filename2 = str.join('\\', ['uploads', filename2])
 
     img1 = cv2.imread(filename1)
     img2 = cv2.imread(filename2)
@@ -192,12 +191,13 @@ if __name__ == '__main__':
 
     r = cv2.boundingRect(np.float32([hull2]))
 
-    center = ((r[0] + int(r[2] / 2), r[1] + int(r[3] / 2)))
+    center = (r[0] + int(r[2] / 2), r[1] + int(r[3] / 2))
 
     # Clone seamlessly.
     output = cv2.seamlessClone(np.uint8(img1Warped), img2, mask, center, cv2.NORMAL_CLONE)
 
-    cv2.imshow("Face Swapped", output)
-    cv2.waitKey(0)
-
-    cv2.destroyAllWindows()
+    cv2.imwrite('uploads\\result.jpg', output)
+    # cv2.imshow("Face Swapped", output)
+    # cv2.waitKey(0)
+    #
+    # cv2.destroyAllWindows()

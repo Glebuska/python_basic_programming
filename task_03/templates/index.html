@@ -10,8 +10,9 @@
 </head>
 <body>
 
+
 <div id="btn-handler" class="container-fluid mt-5 row text-center">
-    <form id="citilink" class='col-lg-6' action="{{ url_for('results') }}">
+    <form class='col-lg-6' method="post" action="{{ url_for('results') }}">
     <button type="submit" class="btn btn-primary">See result</button>
     </form>
 </div>
@@ -27,23 +28,6 @@
   </div>
 </div>
 
-<div class="container-fluid mt-5">
-    <table class="table table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">BrandName</th>
-            <th scope="col">Site</th>
-            <th scope="col">Price</th>
-        </tr>
-        </thead>
-        <tbody id="table_body">
-        </tbody>
-    </table>
-</div>
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -51,7 +35,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="data_worker.js"></script>
 
 </body>
 </html>
