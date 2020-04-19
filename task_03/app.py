@@ -52,13 +52,18 @@ def index():
             # append image urls
             file_urls.append(photos.url(filename))
         if len(file_urls) % 2 == 0:
-            start_swaping(file_names[len(file_names) - 2], file_names[len(file_names) - 1])
-            file_urls.append(photos.url('result.jpg'))
-            return redirect(url_for('return_result'))
+            try:
+                start_swaping(file_names[len(file_names) - 2], file_names[len(file_names) - 1])
+                session['file_urls'] = file_urls
+                return redirect(url_for('return_result'))
+            except:
+                session.pop('file_urls', None)
+                session.pop('file_names', None)
+                flash("No face detection. Please upload image with face")
+                return render_template('index.html')
 
         session['file_urls'] = file_urls
         session['file_names'] = file_names
-        session.modified = True
         return "uploading..."
 
     return render_template('index.html')
@@ -67,10 +72,10 @@ def index():
 @app.route('/return_result')
 def return_result():
     uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
-    return send_from_directory(directory=uploads, filename="result.jpg")
+    return send_from_directory(directory=uploads, filename='result.jpg')
 
 
-@app.route('/results',  methods=['GET', 'POST'])
+@app.route('/results', methods=['GET', 'POST'])
 def results():
     # redirect to home if no images to display
 
