@@ -8,14 +8,13 @@
 <a href="{{ url_for('index') }}">Back to main page</a><p>
 
 <ul>
-{% for file_url in file_urls %}
-    <li><img src="{{ file_url }}"></li>
-{% endfor %}
+    <li><img src="{{ first_file }}"></li>
+    <li><img src="{{ second_file }}"></li>
 </ul>
 
 <div class="table table-striped">
     <h1>Result:</h1>
-    <img src="{{url_for('return_result')}}">
+    <img src="{{result_image}}">
 </div>
 </body>
 </html>
