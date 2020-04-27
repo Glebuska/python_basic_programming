@@ -66,13 +66,14 @@ def index():
 
 @app.route('/result', methods=['GET', 'POST'])
 def return_result():
-    if "file_names" not in session or session['file_names'] == []:
+    if "file_names" not in session or len(session['file_names']) != 3:
+        session.pop('file_names', None)
         return redirect(url_for('index'))
 
     file_names = session['file_names']
-    first_img = file_names[len(file_names) - 3]
-    second_img = file_names[len(file_names) - 2]
-    result_img = file_names[len(file_names) - 1]
+    first_img = file_names[-3]
+    second_img = file_names[-2]
+    result_img = file_names[-1]
     session.pop('file_names', None)
     # uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
     # return send_from_directory(directory=uploads, filename='result.jpg')
