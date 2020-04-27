@@ -34,12 +34,10 @@ def apply_affine_transform(src, srcTri, dstTri, size):
 
 # Check if a point is inside a rectangle
 def rect_contains(rect, point):
-    if point[0] < rect[0] \
+    return not point[0] < rect[0] \
             or point[1] < rect[1] \
             or point[0] > rect[0] + rect[2] \
-            or point[1] > rect[1] + rect[3]:
-        return False
-    return True
+            or point[1] > rect[1] + rect[3]
 
 
 # calculate delanauy triangle

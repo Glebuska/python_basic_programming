@@ -45,7 +45,7 @@ def index():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         file_names.append(filename)
 
-        if len(file_names) % 2 == 0:
+        if len(file_names) >= 2:
             try:
                 first_img = file_names[len(file_names) - 2]
                 second_img = file_names[len(file_names) - 1]
