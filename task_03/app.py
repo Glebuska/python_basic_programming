@@ -11,11 +11,12 @@ dropzone = Dropzone(app)
 
 app.config['SECRET_KEY'] = 'supersecretkeygoeshere'
 
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/static/uploads/'
 # Dropzone settings
 app.config['DROPZONE_ALLOWED_FILE_CUSTOM'] = True
 app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image/*'
 app.config['DROPZONE_MAX_FILES'] = 1
-app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -48,7 +49,7 @@ def index():
             try:
                 first_img = file_names[len(file_names) - 2]
                 second_img = file_names[len(file_names) - 1]
-                result_name = start_swapping(first_img, second_img)
+                result_name = start_swapping(app.config['UPLOAD_FOLDER'], first_img, second_img)
                 file_names.append(result_name)
                 session['file_names'] = file_names
                 return render_template('index.html')
@@ -83,4 +84,6 @@ def return_result():
 
 
 if __name__ == '__main__':
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.mkdir(UPLOAD_FOLDER)
     app.run(debug=True)

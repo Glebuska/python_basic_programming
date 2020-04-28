@@ -1,6 +1,7 @@
 import cv2
-import dlib
+import face_recognition
 import numpy as np
+import os
 from datetime import datetime
 
 
@@ -116,7 +117,7 @@ def warp_triangle(img1, img2, t1, t2):
     img2[r2[1]:r2[1] + r2[3], r2[0]:r2[0] + r2[2]] = img2[r2[1]:r2[1] + r2[3], r2[0]:r2[0] + r2[2]] + img2_rect
 
 
-def start_swapping(file_name1, file_name2):
+def start_swapping(path, file_name1, file_name2):
     # # Make sure OpenCV is version 3.0 or above
     # (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
     #
@@ -125,11 +126,11 @@ def start_swapping(file_name1, file_name2):
     #     sys.exit(1)
 
     # Read images
-    file_name1 = str.join('\\', ['static', 'uploads', file_name1])
-    file_name2 = str.join('\\', ['static', 'uploads', file_name2])
+    file_name1 = os.path.join(path, file_name1)
+    file_name2 = os.path.join(path, file_name2)
 
-    img1d = dlib.load_rgb_image(file_name1)
-    img2d = dlib.load_rgb_image(file_name2)
+    # img1d = dlib.load_rgb_image(file_name1)
+    # img2d = dlib.load_rgb_image(file_name2)
 
 
     # image1 = face_recognition.load_image_file(filename1)
@@ -137,19 +138,24 @@ def start_swapping(file_name1, file_name2):
 
     # Read array of corresponding points
 
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+    # detector = dlib.get_frontal_face_detector()
+    # predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+    #
+    # rect1 = detector(img1d)[0]
+    # sp1 = predictor(img1d, rect1)
+    # points1 = [(p.x, p.y) for p in sp1.parts()]
+    #
+    # rect2 = detector(img2d)[0]
+    # sp2 = predictor(img2d, rect2)
+    # points2 = [(p.x, p.y) for p in sp2.parts()]
 
-    rect1 = detector(img1d)[0]
-    sp1 = predictor(img1d, rect1)
-    points1 = [(p.x, p.y) for p in sp1.parts()]
+    img1 = cv2.imread(file_name1)
+    img2 = cv2.imread(file_name2)
 
-    rect2 = detector(img2d)[0]
-    sp2 = predictor(img2d, rect2)
-    points2 = [(p.x, p.y) for p in sp2.parts()]
+    img1_warped = np.copy(img2)
 
-    # points1 = read_points(face_recognition.face_landmarks(img1)[0])
-    # points2 = read_points(face_recognition.face_landmarks(img2)[0])
+    points1 = read_points(face_recognition.face_landmarks(img1)[0])
+    points2 = read_points(face_recognition.face_landmarks(img2)[0])
     # points1 = readPoints(filename1 + '.txt')
     # points2 = readPoints(filename2 + '.txt')
 
@@ -164,11 +170,6 @@ def start_swapping(file_name1, file_name2):
         hull2.append(points2[int(hull_index[i])])
 
     # Find delanauy traingulation for convex hull points
-
-    img1 = cv2.imread(file_name1)
-    img2 = cv2.imread(file_name2)
-
-    img1_warped = np.copy(img2)
 
     size_img2 = img2.shape
     rect = (0, 0, size_img2[1], size_img2[0])
@@ -208,7 +209,7 @@ def start_swapping(file_name1, file_name2):
 
     name = f'result{datetime.now()}.jpg'
     name = name.replace(':', '')
-    path = str.join(r'\\', ['static', 'uploads', name])
+    path = os.path.join(path, name)
     if not cv2.imwrite(path, output):
         raise Exception("Could not write image")
 
