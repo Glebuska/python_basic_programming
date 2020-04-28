@@ -1,7 +1,6 @@
 import os
 
-from flask import Flask, redirect, render_template, request, session, url_for, flash, current_app, \
-    send_from_directory
+from flask import Flask, redirect, render_template, request, session, url_for
 from flask_dropzone import Dropzone
 from werkzeug.utils import secure_filename
 

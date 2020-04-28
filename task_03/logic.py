@@ -1,7 +1,8 @@
 import cv2
-import face_recognition
+import dlib
 import numpy as np
 from datetime import datetime
+
 
 # Read points from text file
 def read_points(points):
@@ -35,9 +36,9 @@ def apply_affine_transform(src, srcTri, dstTri, size):
 # Check if a point is inside a rectangle
 def rect_contains(rect, point):
     return not point[0] < rect[0] \
-            or point[1] < rect[1] \
-            or point[0] > rect[0] + rect[2] \
-            or point[1] > rect[1] + rect[3]
+           or point[1] < rect[1] \
+           or point[0] > rect[0] + rect[2] \
+           or point[1] > rect[1] + rect[3]
 
 
 # calculate delanauy triangle
@@ -127,8 +128,8 @@ def start_swapping(file_name1, file_name2):
     file_name1 = str.join('\\', ['static', 'uploads', file_name1])
     file_name2 = str.join('\\', ['static', 'uploads', file_name2])
 
-    img1 = cv2.imread(file_name1)
-    img2 = cv2.imread(file_name2)
+    img1 = dlib.load_rgb_image(file_name1)
+    img2 = dlib.load_rgb_image(file_name2)
     img1_warped = np.copy(img2)
 
     # image1 = face_recognition.load_image_file(filename1)
@@ -136,8 +137,19 @@ def start_swapping(file_name1, file_name2):
 
     # Read array of corresponding points
 
-    points1 = read_points(face_recognition.face_landmarks(img1)[0])
-    points2 = read_points(face_recognition.face_landmarks(img2)[0])
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+
+    rect1 = detector(img1)[0]
+    sp1 = predictor(img1, rect1)
+    points1 = [(p.x, p.y) for p in sp1.parts()]
+
+    rect2 = detector(img2)[0]
+    sp2 = predictor(img2, rect2)
+    points2 = [(p.x, p.y) for p in sp2.parts()]
+
+    # points1 = read_points(face_recognition.face_landmarks(img1)[0])
+    # points2 = read_points(face_recognition.face_landmarks(img2)[0])
     # points1 = readPoints(filename1 + '.txt')
     # points2 = readPoints(filename2 + '.txt')
 
