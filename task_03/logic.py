@@ -128,9 +128,9 @@ def start_swapping(file_name1, file_name2):
     file_name1 = str.join('\\', ['static', 'uploads', file_name1])
     file_name2 = str.join('\\', ['static', 'uploads', file_name2])
 
-    img1 = dlib.load_rgb_image(file_name1)
-    img2 = dlib.load_rgb_image(file_name2)
-    img1_warped = np.copy(img2)
+    img1d = dlib.load_rgb_image(file_name1)
+    img2d = dlib.load_rgb_image(file_name2)
+
 
     # image1 = face_recognition.load_image_file(filename1)
     # image2 = face_recognition.load_image_file(filename2)
@@ -140,12 +140,12 @@ def start_swapping(file_name1, file_name2):
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 
-    rect1 = detector(img1)[0]
-    sp1 = predictor(img1, rect1)
+    rect1 = detector(img1d)[0]
+    sp1 = predictor(img1d, rect1)
     points1 = [(p.x, p.y) for p in sp1.parts()]
 
-    rect2 = detector(img2)[0]
-    sp2 = predictor(img2, rect2)
+    rect2 = detector(img2d)[0]
+    sp2 = predictor(img2d, rect2)
     points2 = [(p.x, p.y) for p in sp2.parts()]
 
     # points1 = read_points(face_recognition.face_landmarks(img1)[0])
@@ -164,6 +164,12 @@ def start_swapping(file_name1, file_name2):
         hull2.append(points2[int(hull_index[i])])
 
     # Find delanauy traingulation for convex hull points
+
+    img1 = cv2.imread(file_name1)
+    img2 = cv2.imread(file_name2)
+
+    img1_warped = np.copy(img2)
+
     size_img2 = img2.shape
     rect = (0, 0, size_img2[1], size_img2[0])
 
